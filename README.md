@@ -9,7 +9,7 @@ Scissors Game project.
 
 ## Live Demo
 
-[View Live](https://simeonatarr231.github.io/arena)
+[View Live](https://simeonatarr231.github.io/arena/)
 
 ---
 
@@ -70,11 +70,12 @@ generation and win/lose/draw comparison logic.
 ---
 
 ## Project Structure
+
 arena/
-├── index.html      — full-viewport semantic structure
-├── style.css       — split-screen layout, result flood, log panel
-├── script.js       — game logic, match state, Lucide integration
-└── README.md       — project documentation
+├── index.html — full-viewport semantic structure
+├── style.css — split-screen layout, result flood, log panel
+├── script.js — game logic, match state, Lucide integration
+└── README.md — project documentation
 
 ---
 
