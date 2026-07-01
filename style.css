@@ -13,7 +13,9 @@
   --font-mono: "JetBrains Mono", monospace;
 }
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -22,6 +24,7 @@
 html,
 body {
   height: 100%;
+  width: 100%;
   overflow: hidden;
 }
 
@@ -38,23 +41,27 @@ button {
   cursor: pointer;
 }
 
-/* ARENA — full viewport, two halves */
+/* ARENA GRID */
 .arena {
   position: relative;
-  height: 100vh;
   width: 100vw;
+  height: 100vh;
+  height: 100dvh; /* dynamic viewport height — fixes mobile browser chrome */
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr auto;
+  overflow: hidden;
 }
 
+/* SIDES */
 .side {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  transition: background-color 250ms ease;
+  gap: 0.4rem;
+  padding: 1rem;
+  min-height: 0; /* critical — prevents flex children from overflowing */
 }
 
 .side-player {
@@ -70,73 +77,80 @@ button {
 }
 
 .side-label {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   letter-spacing: 0.3em;
   opacity: 0.7;
 }
 
 .side-score {
   font-family: var(--font-display);
-  font-size: 6rem;
+  font-size: clamp(2.5rem, 12vw, 6rem);
   line-height: 1;
 }
 
-/* CENTER RAIL — overlays the split, dead center */
+/* CENTER RAIL */
 .center-rail {
   position: absolute;
   top: 0;
   left: 50%;
   transform: translateX(-50%);
-  height: 100%;
+  height: calc(100% - 5rem); /* stops above the choice dock */
   width: 1px;
   background-color: rgba(255, 255, 255, 0.15);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding-top: 2rem;
+  padding-top: 1.5rem;
   gap: 0.75rem;
+  pointer-events: none;
 }
 
 .match-status {
   background-color: var(--void);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 0.4rem 1rem;
-  font-size: 0.7rem;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.65rem;
   letter-spacing: 0.2em;
   white-space: nowrap;
+  pointer-events: auto;
 }
 
 .streak-flag {
   background-color: var(--void);
   border: 1px solid var(--draw);
   color: var(--draw);
-  padding: 0.3rem 0.8rem;
-  font-size: 0.65rem;
-  letter-spacing: 0.15em;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
   white-space: nowrap;
 }
 
-/* CHOICE DOCK — bottom row, spans full width */
+/* CHOICE DOCK */
 .choice-dock {
   grid-column: 1 / -1;
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 1.5rem;
   background-color: var(--void);
-  padding: 1.5rem;
+  padding: 1rem 1.5rem;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
+  /* fixed minimum height so it never collapses */
+  min-height: 5rem;
+  flex-shrink: 0;
 }
 
 .choice-btn {
-  width: 4.5rem;
-  height: 4.5rem;
+  width: 3.5rem;
+  height: 3.5rem;
   border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.25);
   color: var(--ink);
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
   transition:
     transform 120ms ease,
     border-color 120ms ease,
@@ -144,13 +158,14 @@ button {
 }
 
 .choice-icon {
-  width: 1.75rem;
-  height: 1.75rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  pointer-events: none;
 }
 
 .choice-btn:hover {
   border-color: var(--ink);
-  transform: translateY(-4px);
+  transform: translateY(-3px);
 }
 
 .choice-btn:active {
@@ -162,11 +177,11 @@ button {
   pointer-events: none;
 }
 
-/* LOG TOGGLE — fixed corner button */
+/* LOG TOGGLE */
 .log-toggle {
   position: absolute;
-  top: 1.25rem;
-  right: 1.25rem;
+  top: 1rem;
+  right: 1rem;
   width: 2.5rem;
   height: 2.5rem;
   border: 1px solid rgba(255, 255, 255, 0.25);
@@ -175,19 +190,22 @@ button {
   align-items: center;
   justify-content: center;
   z-index: 20;
+  background-color: rgba(10, 10, 12, 0.6);
 }
 
 .toggle-icon {
-  width: 1.1rem;
-  height: 1.1rem;
+  width: 1rem;
+  height: 1rem;
+  pointer-events: none;
 }
 
-/* MATCH LOG — slide-out panel */
+/* MATCH LOG PANEL */
 .match-log {
   position: fixed;
   top: 0;
   right: 0;
   height: 100%;
+  height: 100dvh;
   width: min(320px, 85vw);
   background-color: rgba(10, 10, 12, 0.97);
   border-left: 1px solid rgba(255, 255, 255, 0.15);
@@ -210,6 +228,7 @@ button {
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   font-size: 0.75rem;
   letter-spacing: 0.2em;
+  flex-shrink: 0;
 }
 
 .log-close {
@@ -243,20 +262,17 @@ button {
   font-weight: 700;
   letter-spacing: 0.05em;
 }
-
 .log-entry-outcome.win {
   color: var(--player);
 }
-
 .log-entry-outcome.lose {
   color: var(--opponent);
 }
-
 .log-entry-outcome.draw {
   color: var(--draw);
 }
 
-/* RESULT FLOOD — full screen takeover */
+/* RESULT FLOOD */
 .result-flood {
   position: fixed;
   inset: 0;
@@ -276,9 +292,17 @@ button {
 .result-flood.is-active {
   display: flex;
 }
-
 .result-flood.is-visible {
   opacity: 1;
+}
+.result-flood.flood-win {
+  background-color: var(--player);
+}
+.result-flood.flood-lose {
+  background-color: var(--opponent);
+}
+.result-flood.flood-draw {
+  background-color: var(--draw);
 }
 
 .result-icon {
@@ -314,6 +338,7 @@ button {
 .rematch-icon {
   width: 1rem;
   height: 1rem;
+  pointer-events: none;
 }
 
 .rematch-btn:hover {
@@ -321,21 +346,18 @@ button {
   color: var(--void);
 }
 
-/* RESPONSIVE */
-@media (max-width: 600px) {
-  .side-score {
-    font-size: 3.5rem;
+/* RESPONSIVE — no separate blocks needed */
+@media (max-width: 400px) {
+  .choice-dock {
+    gap: 1rem;
+    padding: 0.75rem 1rem;
   }
   .choice-btn {
-    width: 3.5rem;
-    height: 3.5rem;
+    width: 3rem;
+    height: 3rem;
   }
   .choice-icon {
-    width: 1.4rem;
-    height: 1.4rem;
-  }
-  .match-status {
-    font-size: 0.6rem;
-    padding: 0.3rem 0.7rem;
+    width: 1.25rem;
+    height: 1.25rem;
   }
 }
