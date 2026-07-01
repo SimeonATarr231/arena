@@ -324,53 +324,21 @@ button {
 /* RESPONSIVE */
 @media (max-width: 600px) {
   .arena {
-    grid-template-rows: 1fr auto;
+    height: 80%;
   }
-
-  .side {
-    padding: 1rem 0;
-  }
-
   .side-score {
-    font-size: 2.5rem;
+    font-size: 3.5rem;
   }
-
-  .side-label {
-    font-size: 0.65rem;
-  }
-
-  .choice-dock {
-    padding: 1rem;
-    gap: 1rem;
-  }
-
   .choice-btn {
-    width: 3rem;
-    height: 3rem;
+    width: 3.5rem;
+    height: 3.5rem;
   }
-
   .choice-icon {
-    width: 1.2rem;
-    height: 1.2rem;
+    width: 1.4rem;
+    height: 1.4rem;
   }
-
   .match-status {
-    font-size: 0.55rem;
-    padding: 0.25rem 0.5rem;
-  }
-}
-
-@media (max-height: 700px) {
-  .side-score {
-    font-size: 2rem;
-  }
-
-  .choice-dock {
-    padding: 0.75rem;
-  }
-
-  .choice-btn {
-    width: 2.75rem;
-    height: 2.75rem;
+    font-size: 0.6rem;
+    padding: 0.3rem 0.7rem;
   }
 }
