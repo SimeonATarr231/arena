@@ -323,9 +323,6 @@ button {
 
 /* RESPONSIVE */
 @media (max-width: 600px) {
-  .arena {
-    height: 80%;
-  }
   .side-score {
     font-size: 3.5rem;
   }
