@@ -5,36 +5,36 @@ lucide.createIcons();
 const WIN_TARGET = 3; // first to 3 round-wins takes the match
 
 const CHOICES = {
-  rock: { beats: "scissors", icon: "hand-fist" },
-  paper: { beats: "rock", icon: "hand" },
-  scissors: { beats: "paper", icon: "scissors" },
+  rock:     { beats: "scissors", icon: "hand-fist" },
+  paper:    { beats: "rock",     icon: "hand" },
+  scissors: { beats: "paper",    icon: "scissors" },
 };
 
 // STATE
-let playerScore = 0;
+let playerScore   = 0;
 let opponentScore = 0;
-let currentStreak = 0;
-let lastWinner = null; // "player" | "opponent" | null
-let roundHistory = [];
-let matchOver = false;
+let currentStreak  = 0;
+let lastWinner      = null; // "player" | "opponent" | null
+let roundHistory     = [];
+let matchOver         = false;
 
 // DOM REFERENCES
-const choiceDock = document.getElementById("choiceDock");
-const playerScoreEl = document.getElementById("playerScore");
+const choiceDock     = document.getElementById("choiceDock");
+const playerScoreEl  = document.getElementById("playerScore");
 const opponentScoreEl = document.getElementById("opponentScore");
-const matchStatus = document.getElementById("matchStatus");
-const streakFlag = document.getElementById("streakFlag");
+const matchStatus     = document.getElementById("matchStatus");
+const streakFlag      = document.getElementById("streakFlag");
 
-const logToggle = document.getElementById("logToggle");
-const logClose = document.getElementById("logClose");
-const matchLog = document.getElementById("matchLog");
+const logToggle  = document.getElementById("logToggle");
+const logClose   = document.getElementById("logClose");
+const matchLog   = document.getElementById("matchLog");
 const logEntries = document.getElementById("logEntries");
 
-const resultFlood = document.getElementById("resultFlood");
-const resultIcon = document.getElementById("resultIcon");
-const resultWord = document.getElementById("resultWord");
+const resultFlood  = document.getElementById("resultFlood");
+const resultIcon   = document.getElementById("resultIcon");
+const resultWord   = document.getElementById("resultWord");
 const resultDetail = document.getElementById("resultDetail");
-const rematchBtn = document.getElementById("rematchBtn");
+const rematchBtn   = document.getElementById("rematchBtn");
 
 // COMPUTER CHOICE
 function getComputerChoice() {
@@ -44,6 +44,8 @@ function getComputerChoice() {
 }
 
 // ROUND COMPARISON
+// Returns "win", "lose", or "draw" from the
+// PLAYER's perspective.
 function compareChoices(playerChoice, computerChoice) {
   if (playerChoice === computerChoice) return "draw";
   if (CHOICES[playerChoice].beats === computerChoice) return "win";
@@ -66,18 +68,18 @@ function handleChoice(playerChoice) {
 function updateScoreAndStreak(outcome) {
   if (outcome === "win") {
     playerScore += 1;
-    lastWinner === "player" ? (currentStreak += 1) : (currentStreak = 1);
+    lastWinner === "player" ? currentStreak += 1 : currentStreak = 1;
     lastWinner = "player";
   } else if (outcome === "lose") {
     opponentScore += 1;
-    lastWinner === "opponent" ? (currentStreak += 1) : (currentStreak = 1);
+    lastWinner === "opponent" ? currentStreak += 1 : currentStreak = 1;
     lastWinner = "opponent";
   } else {
     currentStreak = 0;
     lastWinner = null;
   }
 
-  playerScoreEl.textContent = playerScore;
+  playerScoreEl.textContent   = playerScore;
   opponentScoreEl.textContent = opponentScore;
 
   updateStreakFlag();
@@ -100,8 +102,7 @@ function logRound(playerChoice, computerChoice, outcome) {
   const entry = document.createElement("div");
   entry.className = "log-entry";
 
-  const outcomeLabel =
-    outcome === "win" ? "WIN" : outcome === "lose" ? "LOSS" : "DRAW";
+  const outcomeLabel = outcome === "win" ? "WIN" : outcome === "lose" ? "LOSS" : "DRAW";
 
   entry.innerHTML = `
     <span>R${roundHistory.length} — ${playerChoice} vs ${computerChoice}</span>
@@ -113,36 +114,27 @@ function logRound(playerChoice, computerChoice, outcome) {
 
 // RESULT FLOOD DISPLAY
 function showRoundResult(playerChoice, computerChoice, outcome) {
-  resultFlood.className = "result-flood"; // reset classes
+  resultFlood.className = "result-flood is-active";
   resultFlood.classList.add(`flood-${outcome}`);
 
-  resultIcon.setAttribute(
-    "data-lucide",
-    outcome === "win" ? "trophy" : outcome === "lose" ? "skull" : "minus",
+  resultIcon.setAttribute("data-lucide",
+    outcome === "win" ? "trophy" : outcome === "lose" ? "skull" : "minus"
   );
 
-  resultWord.textContent =
-    outcome === "win" ? "VICTORY" : outcome === "lose" ? "DEFEAT" : "DRAW";
+  resultWord.textContent   = outcome === "win" ? "VICTORY" : outcome === "lose" ? "DEFEAT" : "DRAW";
   resultDetail.textContent = `${capitalize(playerChoice)} vs ${capitalize(computerChoice)}`;
 
-  resultFlood.hidden = false;
-  lucide.createIcons(); // re-render the new icon we just injected
+  lucide.createIcons();
 
   requestAnimationFrame(() => {
     resultFlood.classList.add("is-visible");
   });
 
-  // Check for match end
   if (playerScore >= WIN_TARGET || opponentScore >= WIN_TARGET) {
     matchOver = true;
     toggleChoiceButtons(false);
-
     setTimeout(() => {
-      const matchWinner =
-        playerScore >= WIN_TARGET
-          ? "YOU WIN THE MATCH"
-          : "RIVAL WINS THE MATCH";
-      matchStatus.textContent = matchWinner;
+      matchStatus.textContent = playerScore >= WIN_TARGET ? "YOU WIN THE MATCH" : "RIVAL WINS THE MATCH";
       rematchBtn.hidden = false;
     }, 700);
   } else {
@@ -153,7 +145,7 @@ function showRoundResult(playerChoice, computerChoice, outcome) {
 function hideResultFlood() {
   resultFlood.classList.remove("is-visible");
   setTimeout(() => {
-    resultFlood.hidden = true;
+    resultFlood.classList.remove("is-active");
   }, 300);
 }
 
@@ -190,15 +182,13 @@ function capitalize(str) {
 
 // MATCH LOG PANEL TOGGLE
 function openLog() {
-  matchLog.hidden = false;
+  matchLog.style.display = "flex";
   requestAnimationFrame(() => matchLog.classList.add("is-open"));
 }
 
 function closeLog() {
   matchLog.classList.remove("is-open");
-  setTimeout(() => {
-    matchLog.hidden = true;
-  }, 280);
+  setTimeout(() => { matchLog.style.display = "none"; }, 280);
 }
 
 // EVENT LISTENERS
@@ -211,3 +201,6 @@ choiceDock.addEventListener("click", (event) => {
 logToggle.addEventListener("click", openLog);
 logClose.addEventListener("click", closeLog);
 rematchBtn.addEventListener("click", handleRematch);
+
+// Initialize log as hidden
+matchLog.style.display = "none";

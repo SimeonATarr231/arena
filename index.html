@@ -13,6 +13,7 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="style.css" />
   </head>
+
   <body>
     <div class="arena" id="arena">
       <section class="side side-player" id="sidePlayer">
@@ -54,7 +55,7 @@
         <i data-lucide="list" class="toggle-icon"></i>
       </button>
 
-      <aside class="match-log" id="matchLog" hidden>
+      <aside class="match-log" id="matchLog">
         <div class="log-header">
           <span>MATCH LOG</span>
           <button class="log-close" id="logClose" aria-label="Close log">
@@ -64,7 +65,7 @@
         <div class="log-entries" id="logEntries"></div>
       </aside>
 
-      <div class="result-flood" id="resultFlood" hidden>
+      <div class="result-flood" id="resultFlood">
         <i data-lucide="zap" class="result-icon" id="resultIcon"></i>
         <span class="result-word" id="resultWord"></span>
         <span class="result-detail" id="resultDetail"></span>

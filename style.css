@@ -18,16 +18,19 @@
   margin: 0;
   padding: 0;
 }
+
 html,
 body {
   height: 100%;
   overflow: hidden;
 }
+
 body {
   font-family: var(--font-mono);
   color: var(--ink);
   background-color: var(--void);
 }
+
 button {
   font: inherit;
   background: none;
@@ -35,7 +38,7 @@ button {
   cursor: pointer;
 }
 
-/* Game full viewport | 2 half */
+/* ARENA — full viewport, two halves */
 .arena {
   position: relative;
   height: 100vh;
@@ -78,7 +81,7 @@ button {
   line-height: 1;
 }
 
-/* Center Rail | Overlays the split, dead center */
+/* CENTER RAIL — overlays the split, dead center */
 .center-rail {
   position: absolute;
   top: 0;
@@ -114,7 +117,7 @@ button {
   white-space: nowrap;
 }
 
-/* Choice Dock | Button row, spans full width */
+/* CHOICE DOCK — bottom row, spans full width */
 .choice-dock {
   grid-column: 1 / -1;
   display: flex;
@@ -159,7 +162,7 @@ button {
   pointer-events: none;
 }
 
-/* Log Toggle */
+/* LOG TOGGLE — fixed corner button */
 .log-toggle {
   position: absolute;
   top: 1.25rem;
@@ -179,7 +182,7 @@ button {
   height: 1.1rem;
 }
 
-/* Match Log | Slide-out Panel */
+/* MATCH LOG — slide-out panel */
 .match-log {
   position: fixed;
   top: 0;
@@ -197,10 +200,6 @@ button {
 
 .match-log.is-open {
   transform: translateX(0);
-}
-
-.match-log[hidden] {
-  display: flex; /* overridden by JS toggling instead of [hidden] alone */
 }
 
 .log-header {
@@ -257,12 +256,12 @@ button {
   color: var(--draw);
 }
 
-/* Result Flood | Full screen Taker */
+/* RESULT FLOOD — full screen takeover */
 .result-flood {
   position: fixed;
   inset: 0;
   z-index: 50;
-  display: flex;
+  display: none;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -274,18 +273,12 @@ button {
     background-color 400ms ease;
 }
 
-.result-flood.is-visible {
-  opacity: 1;
+.result-flood.is-active {
+  display: flex;
 }
 
-.result-flood.flood-win {
-  background-color: var(--player);
-}
-.result-flood.flood-lose {
-  background-color: var(--opponent);
-}
-.result-flood.flood-draw {
-  background-color: var(--draw);
+.result-flood.is-visible {
+  opacity: 1;
 }
 
 .result-icon {
@@ -328,21 +321,56 @@ button {
   color: var(--void);
 }
 
-/* Responsive */
+/* RESPONSIVE */
 @media (max-width: 600px) {
+  .arena {
+    grid-template-rows: 1fr auto;
+  }
+
+  .side {
+    padding: 1rem 0;
+  }
+
   .side-score {
-    font-size: 3.5rem;
+    font-size: 2.5rem;
   }
+
+  .side-label {
+    font-size: 0.65rem;
+  }
+
+  .choice-dock {
+    padding: 1rem;
+    gap: 1rem;
+  }
+
   .choice-btn {
-    width: 3.5rem;
-    height: 3.5rem;
+    width: 3rem;
+    height: 3rem;
   }
+
   .choice-icon {
-    width: 1.4rem;
-    height: 1.4rem;
+    width: 1.2rem;
+    height: 1.2rem;
   }
+
   .match-status {
-    font-size: 0.6rem;
-    padding: 0.3rem 0.7rem;
+    font-size: 0.55rem;
+    padding: 0.25rem 0.5rem;
+  }
+}
+
+@media (max-height: 700px) {
+  .side-score {
+    font-size: 2rem;
+  }
+
+  .choice-dock {
+    padding: 0.75rem;
+  }
+
+  .choice-btn {
+    width: 2.75rem;
+    height: 2.75rem;
   }
 }
